@@ -2,14 +2,16 @@ package com.skula.link.models;
 
 public class Request  {
 	private String id;
+	private String memberId;
 	private String type;
 	private String label;
 
 	public Request() {
 	}
 
-	public Request(String id, String type, String label) {
+	public Request(String id, String memberId, String type, String label) {
 		this.id = id;
+		this.memberId = memberId;
 		this.type = type;
 		this.label = label;
 	}
@@ -20,6 +22,14 @@ public class Request  {
 
 	public String getId() {
 		return id;
+	}
+	
+	public void setMemberId(String memberId) {
+		this.memberId = memberId;
+	}
+
+	public String getMemberId() {
+		return memberId;
 	}
 
 	public void setType(String type) {

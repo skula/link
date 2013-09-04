@@ -13,21 +13,21 @@ public class LinkersTab extends Fragment implements ActionBar.TabListener {
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		// Get the view from fragment2.xml
+		// Get the view from linkerstab_layout.xml
 		getActivity().setContentView(R.layout.linkerstab_layout);
 	}
 
 	public void onTabSelected(Tab tab, FragmentTransaction ft) {
 		// TODO Auto-generated method stub
 		mFragment = new LinkersTab();
-		// Attach fragment2.xml layout
+		// Attach linkerstab_layout.xml layout
 		ft.add(android.R.id.content, mFragment);
 		ft.attach(mFragment);
 	}
 
 	public void onTabUnselected(Tab tab, FragmentTransaction ft) {
 		// TODO Auto-generated method stub
-		// Remove fragment2.xml layout
+		// Remove linkerstab_layout.xml layout
 		ft.remove(mFragment);
 	}
 

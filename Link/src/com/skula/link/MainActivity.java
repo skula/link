@@ -29,18 +29,19 @@ public class MainActivity extends Activity {
 		tab = actionBar.newTab().setTabListener(new ProfilTab());
 		// Create your own custom icon
 		//tab.setIcon(R.drawable.tab1);
+		tab.setText("Profil");
 		actionBar.addTab(tab);
 
 		// Create Second Tab
 		tab = actionBar.newTab().setTabListener(new LinkersTab());
 		// Set Tab Title
-		tab.setText("Tab2");
+		tab.setText("Linkers");
 		actionBar.addTab(tab);
 
 		// Create Third Tab
 		tab = actionBar.newTab().setTabListener(new MailTab());
 		// Set Tab Title
-		tab.setText("Tab3");
+		tab.setText("Mails");
 		actionBar.addTab(tab);
 	}
 }
