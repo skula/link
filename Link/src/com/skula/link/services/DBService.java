@@ -92,7 +92,7 @@ public class DBService {
 		return 1;
 	}
 
-	public Member getMember(int id) {
+	public Member getAccount(int id) {
 		Cursor cursor = database.query(TABLE_NAME_MEMBER, new String[] { "login", "passwd", "city", "email", "status", "description", "id", "gender", "points", "birth"}, "id=" + id, null, null, null, null);
 		if (cursor.moveToFirst()) {
 			do {
@@ -120,92 +120,23 @@ public class DBService {
 		}
 		return null;
 	}
-
-	// public Member[] getMembers() {
-	public List<Member> getMembers() {
-		List<Member> res = new ArrayList<Member>();
-		Cursor cursor = database.query(TABLE_NAME_MEMBER, new String[] { "login", "passwd", "city", "email", "status", "description", "id", "gender", "points", "birth"}, null, null, null, null, null);
+	
+	public Member getMember(int id) {
+		Cursor cursor = database.query(TABLE_NAME_MEMBER, new String[] { "login", "city", "email", "status", "description", "id", "gender", "points", "birth"}, "id=" + id, null, null, null, null);
 		if (cursor.moveToFirst()) {
 			do {
 				try{
 					Member member = new Member();
 					member.setLogin(cursor.getString(0));
-					member.setPasswd(cursor.getString(1));
-					member.setCity(cursor.getString(2));
-					member.setEmail(cursor.getString(3));
-					member.setStatus(cursor.getString(4));
-					member.setDescription(cursor.getString(5));
-					member.setId(cursor.getString(6));
-					member.setGender(cursor.getString(7));
-					member.setPoints(cursor.getString(8));
-					member.setBirth(cursor.getString(9));
-					res.add(member);
-				}catch(Exception e){
-					String s = e.getMessage();
-				}
-
-			} while (cursor.moveToNext());
-		}
-		if (cursor != null && !cursor.isClosed()) {
-			cursor.close();
-		}
-		// return (Member[]) res.toArray(new Member[res.size()]);
-		return res;
-	}
-	
-	public int getMemberId(String login){
-		return 1;
-	}
-	
-	public String getMemberLogin(String id){
-		return "";
-	}
-
-	/*public void insertFriendship(Friendship friendship) {
-		String sql = "insert into " + TABLE_NAME_FRIENDSHIP +"(memberid, linkerid, date) values (?, ?, ?)";
-		statement = database.compileStatement(sql);
-
-		statement.bindLong(1, friendship.getMemberid());
-		statement.bindLong(2, friendship.getLinkerid());
-		statement.bindString(3, friendship.getDate());
-		statement.executeInsert();
-	}*/
-
-	/*public void updateFriendship(int id, Friendship friendship) {
-		ContentValues args = new ContentValues();
-		args.put("memberid", friendship.getMemberid());
-		args.put("linkerid", friendship.getLinkerid());
-		args.put("date", friendship.getDate());
-		database.update(TABLE_NAME_FRIENDSHIP, args, "id=" + id, null);
-	}*/
-
-	/*public void deleteFriendship(int id) {
-		database.delete(TABLE_NAME_FRIENDSHIP,"id=" + id, null);
-	}*/
-
-	/*public int getNextFriendshipId() {
-		Cursor cursor = database.query(TABLE_NAME_FRIENDSHIP, new String[] { "max(id)" }, null, null, null, null, null);
-		if (cursor.moveToFirst()) {
-			do {
-				return cursor.getInt(0) + 1;
-			} while (cursor.moveToNext());
-		}
-		if (cursor != null && !cursor.isClosed()) {
-			cursor.close();
-		}
-		return 1;
-	}*/
-
-	/*public Friendship getFriendship(int id) {
-		Cursor cursor = database.query(TABLE_NAME_FRIENDSHIP, new String[] { "memberid", "linkerid", "date"}, "id=" + id, null, null, null, null);
-		if (cursor.moveToFirst()) {
-			do {
-				try{
-					Friendship friendship = new Friendship();
-					friendship.setMemberid(cursor.getString(0));
-					friendship.setLinkerid(cursor.getString(1));
-					friendship.setDate(cursor.getString(2));
-					return friendship;
+					member.setCity(cursor.getString(1));
+					member.setEmail(cursor.getString(2));
+					member.setStatus(cursor.getString(3));
+					member.setDescription(cursor.getString(4));
+					member.setId(cursor.getString(5));
+					member.setGender(cursor.getString(6));
+					member.setPoints(cursor.getString(7));
+					member.setBirth(cursor.getString(8));
+					return member;
 				}catch(Exception e){
 					String s = e.getMessage();
 				}
@@ -216,20 +147,26 @@ public class DBService {
 			cursor.close();
 		}
 		return null;
-	}*/
+	}
 
-	// public Friendship[] getFriendships() {
-	/*public List<Friendship> getFriendships() {
-		List<Friendship> res = new ArrayList<Friendship>();
-		Cursor cursor = database.query(TABLE_NAME_FRIENDSHIP, new String[] { "memberid", "linkerid", "date"}, null, null, null, null, null);
+	public Member[] getMembers() {
+	//public List<Member> getMembers() {
+		List<Member> res = new ArrayList<Member>();
+		Cursor cursor = database.query(TABLE_NAME_MEMBER, new String[] { "login", "passwd", "city", "email", "status", "description", "id", "gender", "points", "birth"}, null, null, null, null, null);
 		if (cursor.moveToFirst()) {
 			do {
 				try{
-					Friendship friendship = new Friendship();
-					friendship.setMemberid(cursor.getString(0));
-					friendship.setLinkerid(cursor.getString(1));
-					friendship.setDate(cursor.getString(2));
-					res.add(friendship;
+					Member member = new Member();
+					member.setLogin(cursor.getString(0));
+					member.setCity(cursor.getString(1));
+					member.setEmail(cursor.getString(2));
+					member.setStatus(cursor.getString(3));
+					member.setDescription(cursor.getString(4));
+					member.setId(cursor.getString(5));
+					member.setGender(cursor.getString(6));
+					member.setPoints(cursor.getString(7));
+					member.setBirth(cursor.getString(8));
+					res.add(member);
 				}catch(Exception e){
 					String s = e.getMessage();
 				}
@@ -239,9 +176,51 @@ public class DBService {
 		if (cursor != null && !cursor.isClosed()) {
 			cursor.close();
 		}
-		// return (Friendship[]) res.toArray(new Friendship[res.size()]);
-		return res;
-	}*/
+		return (Member[]) res.toArray(new Member[res.size()]);
+		//return res;
+	}
+	
+	public int getMemberId(String login){
+		return 1;
+	}
+	
+	public String getMemberLogin(String id){
+		return "";
+	}
+
+	public void insertFriendship(String memberId, String linkerId) {
+		String sql = "insert into " + TABLE_NAME_FRIENDSHIP +"(memberid, linkerid, date) values (?, ?, ?)";
+		statement = database.compileStatement(sql);
+
+		statement.bindLong(1, Long.valueOf(memberId));
+		statement.bindLong(2, Long.valueOf(linkerId));
+		statement.bindString(3, "sysdate");
+		statement.executeInsert();
+	}
+
+	public void deleteFriendship(String memberId, String linkerId) {
+		database.delete(TABLE_NAME_FRIENDSHIP,"memberid=" + memberId + " and linkerid=" + linkerId, null);
+	}
+
+	public Member[] getFriends(String memberId) {
+		List<Member> res = new ArrayList<Member>();
+		String req =  "select m.id, m.login, f.date from friendship f, member m where f.memberid=m.id or f.linkerid=m.id order by f.date" ;
+		Cursor cursor = database.query(TABLE_NAME_FRIENDSHIP, new String[] { "memberid", "linkerid", "date"}, null, null, null, null, null);
+		if (cursor.moveToFirst()) {
+			do {
+				try{
+					
+				}catch(Exception e){
+					String s = e.getMessage();
+				}
+
+			} while (cursor.moveToNext());
+		}
+		if (cursor != null && !cursor.isClosed()) {
+			cursor.close();
+		}
+		return (Member[]) res.toArray(new Member[res.size()]);
+	}
 
 	public void insertRequest(Request request) {
 		String sql = "insert into " + TABLE_NAME_REQUEST +"(id, memberid, type, label) values (?, ?, ?, ?)";

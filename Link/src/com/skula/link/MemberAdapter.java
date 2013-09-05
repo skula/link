@@ -1,6 +1,7 @@
 package com.skula.link;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -27,23 +28,24 @@ public class MemberAdapter extends ArrayAdapter<Member> {
 		
 		TextView idTextView = (TextView) rowView.findViewById(R.id.member_list_id);
 		idTextView.setText(member.getId());
+		idTextView.setTextColor(member.getGender().equals("F")?Color.RED:Color.BLUE);
 		TextView loginTextView = (TextView) rowView.findViewById(R.id.member_list_login);
 		loginTextView.setText(member.getLogin());
-		TextView passwdTextView = (TextView) rowView.findViewById(R.id.member_list_passwd);
-		passwdTextView.setText(member.getPasswd());
-		TextView cityTextView = (TextView) rowView.findViewById(R.id.member_list_city);
-		cityTextView.setText(member.getCity());
-		TextView emailTextView = (TextView) rowView.findViewById(R.id.member_list_email);
-		emailTextView.setText(member.getEmail());
+		//TextView passwdTextView = (TextView) rowView.findViewById(R.id.member_list_passwd);
+		//passwdTextView.setText(member.getPasswd());
+		//TextView cityTextView = (TextView) rowView.findViewById(R.id.member_list_city);
+		//cityTextView.setText(member.getCity());
+		//TextView emailTextView = (TextView) rowView.findViewById(R.id.member_list_email);
+		//emailTextView.setText(member.getEmail());
 		TextView statusTextView = (TextView) rowView.findViewById(R.id.member_list_status);
 		statusTextView.setText(member.getStatus());
-		TextView descriptionTextView = (TextView) rowView.findViewById(R.id.member_list_description);
-		descriptionTextView.setText(member.getDescription());
-		TextView genderTextView = (TextView) rowView.findViewById(R.id.member_list_gender);
-		genderTextView.setText(member.getGender());
+		//TextView descriptionTextView = (TextView) rowView.findViewById(R.id.member_list_description);
+		//descriptionTextView.setText(member.getDescription());
+		//TextView genderTextView = (TextView) rowView.findViewById(R.id.member_list_gender);
+		//genderTextView.setText(member.getGender());
 		TextView pointsTextView = (TextView) rowView.findViewById(R.id.member_list_points);
 		pointsTextView.setText(member.getPoints());
-		TextView birthTextView = (TextView) rowView.findViewById(R.id.member_list_birth);
+		TextView birthTextView = (TextView) rowView.findViewById(R.id.member_list_age);
 		birthTextView.setText(member.getBirth());
 		
 		return rowView;

@@ -2,12 +2,29 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent" >
+	
+	<LinearLayout 
+		android:layout_width="match_parent"
+		android:layout_height="match_parent" 
+		android:orientation="horizontal" >
 
-    <TextView
+		<TextView
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_centerHorizontal="true"
+			android:layout_centerVertical="true"
+			android:text="login" />
+		<EditText
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_centerHorizontal="true"
+			android:layout_centerVertical="true"
+			android:text="status" />
+	</LinearLayout>
+	
+	<ListView
+        android:id="@+id/profiltab_list"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:layout_centerVertical="true"
-        android:text="@string/Fragment1" />
-
+        android:cacheColorHint="#ffffff" />
 </RelativeLayout>

@@ -5,51 +5,52 @@
 	<TextView
 		android:id="@+id/member_list_id"
 		android:layout_width="wrap_content"
-		android:layout_height="wrap_content"/>
-
+		android:layout_height="wrap_content"
+		android:visibility="gone"/>
+		
 	<TextView
-		android:id="@+id/member_list_login"
+		android:id="@+id/member_list_mail"
 		android:layout_width="wrap_content"
-		android:layout_height="wrap_content"/>
+		android:layout_height="wrap_content"
+		android:visibility="gone"/>
 
-	<TextView
-		android:id="@+id/member_list_passwd"
+	<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
 		android:layout_width="wrap_content"
-		android:layout_height="wrap_content"/>
+		android:layout_height="wrap_content"
+		android:orientation="horizontal" >
+		<TextView
+			android:id="@+id/member_list_login"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"/>
 
-	<TextView
-		android:id="@+id/member_list_city"
+		<TextView
+			android:id="@+id/member_list_status"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"/>
+	</LinearLayout>
+
+	<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
 		android:layout_width="wrap_content"
-		android:layout_height="wrap_content"/>
+		android:layout_height="wrap_content"
+		android:orientation="horizontal" >
+		<TextView
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:text="Points: "/>
+			
+		<TextView
+			android:id="@+id/member_list_points"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"/>
 
-	<TextView
-		android:id="@+id/member_list_email"
-		android:layout_width="wrap_content"
-		android:layout_height="wrap_content"/>
-
-	<TextView
-		android:id="@+id/member_list_status"
-		android:layout_width="wrap_content"
-		android:layout_height="wrap_content"/>
-
-	<TextView
-		android:id="@+id/member_list_description"
-		android:layout_width="wrap_content"
-		android:layout_height="wrap_content"/>
-
-	<TextView
-		android:id="@+id/member_list_gender"
-		android:layout_width="wrap_content"
-		android:layout_height="wrap_content"/>
-
-	<TextView
-		android:id="@+id/member_list_points"
-		android:layout_width="wrap_content"
-		android:layout_height="wrap_content"/>
-
-	<TextView
-		android:id="@+id/member_list_birth"
-		android:layout_width="wrap_content"
-		android:layout_height="wrap_content"/>
-
+		<TextView
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:text="Age: "/>
+			
+		<TextView
+			android:id="@+id/member_list_age"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"/>
+	</LinearLayout>
 </LinearLayout>
