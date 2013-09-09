@@ -11,6 +11,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 import android.database.sqlite.SQLiteStatement;
 
 import com.skula.link.models.Challenge;
+import com.skula.link.models.Fact;
 import com.skula.link.models.Member;
 import com.skula.link.models.Request;
 
@@ -35,11 +36,16 @@ public class DBService {
 	public void bouchon() {
 		insertMember(new Member("", "Slown", "123456", "Strasbourg", "slown@hotmail.com", "Vive les vacs!", "Blablabla", "M", "0", "02/04/1988"));
 		insertMember(new Member("", "Van Kriek", "123456", "Glarwimastrauss", "van.kriek@hotmail.com", "Bolshe gu zivalich!", "bloshbloshblosh", "M", "125", "02/04/1988"));
+		insertMember(new Member("", "Marie", "123456", "Gimb", "marie@hotmail.com", "apalata goudy", "dsqdsqdqsdqd", "F", "125", "26/07/1988"));
+		
+		insertFriendship("1","2");
+		insertFriendship("3","1");
 		
 		insertRequest(new Request("","1", "1", "Vends: Of Orcs And Men"));
 		insertRequest(new Request("","1", "2", "Besoin de gazon synthetique"));
 		
-		insertChallenge(new Challenge("", "1", "2", "0", "04/09/2013", "Saute dans la fontaine"));
+		insertChallenge(new Challenge("", "1", "2", "1", "04/09/2013", "Saute dans la fontaine"));
+		insertChallenge(new Challenge("", "3", "1", "2", "04/09/2013", "Plop"));
 	}
 
 	public void insertMember(Member member) {
@@ -204,12 +210,18 @@ public class DBService {
 
 	public Member[] getFriends(String memberId) {
 		List<Member> res = new ArrayList<Member>();
-		String req =  "select m.id, m.login, f.date from friendship f, member m where f.memberid=m.id or f.linkerid=m.id order by f.date" ;
-		Cursor cursor = database.query(TABLE_NAME_FRIENDSHIP, new String[] { "memberid", "linkerid", "date"}, null, null, null, null, null);
+		String req =  "select id, login from member " +
+					  "where id in (select linkerid from friendship where memberid="+memberId+") " +
+					  "or id in (select memberid from friendship where linkerid="+memberId+");" ;
+		Cursor cursor = database.rawQuery(req, null);
+		Member m = null;
 		if (cursor.moveToFirst()) {
 			do {
 				try{
-					
+					m = new Member();
+					m.setId(cursor.getString(0));
+					m.setLogin(cursor.getString(1));
+					res.add(m);
 				}catch(Exception e){
 					String s = e.getMessage();
 				}
@@ -347,19 +359,24 @@ public class DBService {
 		return 1;
 	}
 
-	public Challenge getChallenge(int id) {
-		Cursor cursor = database.query(TABLE_NAME_CHALLENGE, new String[] { "id", "askerId", "makerId", "status", "date", "label"}, "id=" + id, null, null, null, null);
+	public Fact[] getChallenges(String id) {
+		List<Fact> res = new ArrayList<Fact>();
+		String req = "select c.date, c.label, m.login, c.status, case when c.askerid=1 then 'O' else 'N' end as hasask " +
+					 "from challenge c, member m " +
+					 "where (c.makerid=" + id + " and c.askerid=m.id) or (c.askerid=" + id + " and c.makerid=m.id order by c.date);";
+		Cursor cursor = database.rawQuery(req, null);
+		Fact f = null;
 		if (cursor.moveToFirst()) {
 			do {
 				try{
-					Challenge challenge = new Challenge();
-					challenge.setId(cursor.getString(0));
-					challenge.setAskerLogin(getMemberLogin(cursor.getString(1)));
-					challenge.setMakerLogin(getMemberLogin(cursor.getString(2)));
-					challenge.setStatus(cursor.getString(3));
-					challenge.setDate(cursor.getString(4));
-					challenge.setLabel(cursor.getString(5));
-					return challenge;
+					f = new Fact();
+					f.setDate(cursor.getString(0));
+					if(cursor.getString(4).equals("O")){
+						f.setLabel("Vous avez proposé à " + cursor.getString(2) + " le défis: " + cursor.getString(1));
+					}else{
+						f.setLabel(cursor.getString(2) + " vous a proposé le défis: " + cursor.getString(1));
+					}
+					res.add(f);
 				}catch(Exception e){
 					String s = e.getMessage();
 				}
@@ -369,39 +386,11 @@ public class DBService {
 		if (cursor != null && !cursor.isClosed()) {
 			cursor.close();
 		}
-		return null;
-	}
-
-	// public Challenge[] getChallenges() {
-	public List<Challenge> getChallenges() {
-		List<Challenge> res = new ArrayList<Challenge>();
-		Cursor cursor = database.query(TABLE_NAME_CHALLENGE, new String[] { "id", "askerid", "makerid", "status", "date", "label"}, null, null, null, null, null);
-		if (cursor.moveToFirst()) {
-			do {
-				try{
-					Challenge challenge = new Challenge();
-					challenge.setId(cursor.getString(0));
-					challenge.setAskerLogin(getMemberLogin(cursor.getString(1)));
-					challenge.setMakerLogin(getMemberLogin(cursor.getString(2)));
-					challenge.setStatus(cursor.getString(3));
-					challenge.setDate(cursor.getString(4));
-					challenge.setLabel(cursor.getString(5));
-					res.add(challenge);
-				}catch(Exception e){
-					String s = e.getMessage();
-				}
-
-			} while (cursor.moveToNext());
-		}
-		if (cursor != null && !cursor.isClosed()) {
-			cursor.close();
-		}
-		// return (Challenge[]) res.toArray(new Challenge[res.size()]);
-		return res;
+		return (Fact[]) res.toArray(new Fact[res.size()]);
 	}
 	
 	// public Challenge[] getChallenges() {
-	public List<Challenge> getChallenges(String memberId) {
+	/*public List<Challenge> getChallenges(String memberId) {
 		List<Challenge> res = new ArrayList<Challenge>();
 		Cursor cursor = database.query(TABLE_NAME_CHALLENGE, new String[] { "id", "askerid", "makerid", "status", "date", "label"}, "askerid=" + memberId + " or makerid=" + memberId, null, null, null, null);
 		if (cursor.moveToFirst()) {
@@ -426,7 +415,7 @@ public class DBService {
 		}
 		// return (Challenge[]) res.toArray(new Challenge[res.size()]);
 		return res;
-	}
+	}*/
 
 	private static class OpenHelper extends SQLiteOpenHelper {
 		OpenHelper(Context context) {
