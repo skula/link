@@ -10,7 +10,9 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.database.sqlite.SQLiteStatement;
 
+import com.skula.link.enums.EventType;
 import com.skula.link.models.Challenge;
+import com.skula.link.models.Event;
 import com.skula.link.models.Fact;
 import com.skula.link.models.Member;
 import com.skula.link.models.Request;
@@ -34,12 +36,22 @@ public class DBService {
 	}
 
 	public void bouchon() {
+		database.execSQL("DROP TABLE IF EXISTS " + TABLE_NAME_MEMBER);
+		database.execSQL("CREATE TABLE " + TABLE_NAME_MEMBER + "(login TEXT, passwd TEXT, city TEXT, email TEXT, status TEXT, description TEXT, id INTEGER PRIMARY KEY, gender INTEGER, points INTEGER, birth DATE, latitude DOUBLE, longitude DOUBLE)");
+		database.execSQL("DROP TABLE IF EXISTS " + TABLE_NAME_FRIENDSHIP);
+		database.execSQL("CREATE TABLE " + TABLE_NAME_FRIENDSHIP + "(memberid INTEGER, linkerid INTEGER, date DATE)");
+		database.execSQL("DROP TABLE IF EXISTS " + TABLE_NAME_REQUEST);
+		database.execSQL("CREATE TABLE " + TABLE_NAME_REQUEST + "(id INTEGER PRIMARY KEY, memberid INTEGER, type INTEGER, label TEXT)");
+		database.execSQL("DROP TABLE IF EXISTS " + TABLE_NAME_CHALLENGE);
+		database.execSQL("CREATE TABLE " + TABLE_NAME_CHALLENGE + "(id INTEGER PRIMARY KEY, askerid INTEGER, makerid INTEGER, status INTEGER, date DATE, label TEXT)");
+		
+		
 		insertMember(new Member("", "Slown", "123456", "Strasbourg", "slown@hotmail.com", "Vive les vacs!", "Blablabla", "M", "0", "02/04/1988"));
 		insertMember(new Member("", "Van Kriek", "123456", "Glarwimastrauss", "van.kriek@hotmail.com", "Bolshe gu zivalich!", "bloshbloshblosh", "M", "125", "02/04/1988"));
 		insertMember(new Member("", "Marie", "123456", "Gimb", "marie@hotmail.com", "apalata goudy", "dsqdsqdqsdqd", "F", "125", "26/07/1988"));
 		
-		insertFriendship("1","2");
-		insertFriendship("3","1");
+		insertFriendship("1","2", "01/01/2013");
+		insertFriendship("3","1", "07/01/2013");
 		
 		insertRequest(new Request("","1", "1", "Vends: Of Orcs And Men"));
 		insertRequest(new Request("","1", "2", "Besoin de gazon synthetique"));
@@ -193,14 +205,57 @@ public class DBService {
 	public String getMemberLogin(String id){
 		return "";
 	}
+	
+	public Event[] getEvents(String id){	
+		String req = "select date, login, ask, type, label, status " +
+					 "from (" +
+								"select f.date, 'F' as type, m.login, null as label, null as status, case when m.id=f.linkerid then 'O' else 'N' end as ask " +
+								"from friendship f, member m  " +
+								"where (f.memberid=m.id and f.linkerid="+id+") or (f.memberid="+id+" and m.id=f.linkerid) " +
+								"union " +
+								"select c.date, 'C' as type, m.login, c.label, c.status, case when m.id=c.makerid then 'O' else 'N' end as ask " +
+								"from challenge c, member m " +
+								"where (c.makerid="+id+" and c.askerid=m.id) or (c.askerid="+id+" and c.makerid=m.id) " +
+							")" + 
+					"order by date desc;";
+		Cursor cursor = database.rawQuery(req, null);
+		
+		List<Event> res = new ArrayList<Event>();
+		if (cursor.moveToFirst()) {
+			do {
+				try{
+					Event event = new Event();
+					event.setDate(cursor.getString(0));
+					event.setLinkerLogin(cursor.getString(1));
+					event.setAsk(cursor.getString(2).equals("O"));				
+					if(cursor.getString(3).equals("C")){
+						event.setType(EventType.CHALLENGE);
+						event.setLabel(cursor.getString(4));
+						event.setStatus(cursor.getString(5));
+					}else{
+						event.setType(EventType.FRIENDSHIP);
+					}
+					res.add(event);
+				}catch(Exception e){
+					String s = e.getMessage();
+				}
 
-	public void insertFriendship(String memberId, String linkerId) {
+			} while (cursor.moveToNext());
+		}
+		if (cursor != null && !cursor.isClosed()) {
+			cursor.close();
+		}
+		
+		return (Event[]) res.toArray(new Event[res.size()]);
+	}
+
+	public void insertFriendship(String memberId, String linkerId, String date) {
 		String sql = "insert into " + TABLE_NAME_FRIENDSHIP +"(memberid, linkerid, date) values (?, ?, ?)";
 		statement = database.compileStatement(sql);
 
 		statement.bindLong(1, Long.valueOf(memberId));
 		statement.bindLong(2, Long.valueOf(linkerId));
-		statement.bindString(3, "sysdate");
+		statement.bindString(3, date);
 		statement.executeInsert();
 	}
 
