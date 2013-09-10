@@ -27,19 +27,17 @@ public class EventAdapter extends ArrayAdapter<Event> {
 		LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 		View rowView = inflater.inflate(R.layout.event_list_layout, parent, false);
 
-		String text = "<font color='red'>" + e.getDate() + ":";
+		String text = "<b>" + e.getDate() + "</b>: ";
 		if(e.getType()==EventType.CHALLENGE){
 			if(e.isAsk()){
-				text += "vous avez défié " + e.getLinkerLogin() + ": \"" + e.getLabel() + "\".";
+				text += "vous avez défié <font color=\"red\">" + e.getLinkerLogin() + "</font>: </br><i>\"" + e.getLabel() + "\"</i>.";
 			}else{
-				text += e.getLinkerLogin() + " vous a défié: \"" + e.getLabel() + "\".";
+				text += "<font color=\"red\">" + e.getLinkerLogin() + "</font> vous a défié: </br></br><i>\"" + e.getLabel() + "\"</i>.";
 			}
-			text += "-> " + e.getStatus() + ".";
+			text += " - " + e.getStatus() + ".";
 		}else{
-			text += "vous etes ami avec " + e.getLinkerLogin() + ".";
+			text += "vous etes ami avec <font color=\"red\">" + e.getLinkerLogin() + "</font>.";
 		}
-		
-		text+="</font>";
 		
 		TextView labelTextView = (TextView) rowView.findViewById(R.id.event_list_text);
 		labelTextView.setText(Html.fromHtml(text));

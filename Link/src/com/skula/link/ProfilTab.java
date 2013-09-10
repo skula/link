@@ -5,9 +5,12 @@ import android.app.ActionBar.Tab;
 import android.app.Fragment;
 import android.app.FragmentTransaction;
 import android.os.Bundle;
+import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import com.skula.link.models.Event;
+import com.skula.link.models.Member;
 import com.skula.link.services.DBService;
 
 public class ProfilTab extends Fragment implements ActionBar.TabListener {
@@ -23,12 +26,19 @@ public class ProfilTab extends Fragment implements ActionBar.TabListener {
 		getActivity().setContentView(R.layout.profiltab_layout);
 		
 		this.dbService = new DBService(getActivity());
-		dbService.bouchon();
+		//dbService.bouchon();
 		this.listView = (ListView) getActivity().findViewById(R.id.profiltab_list);
 		Event eventList[] = dbService.getEvents("1");
 		EventAdapter adapter = new EventAdapter(getActivity(),
 				R.layout.event_list_layout, eventList);
 		listView.setAdapter(adapter);
+		
+		Member m = dbService.getAccount("1");
+		TextView loginTv = (TextView) getActivity().findViewById(R.id.profiltab_login);
+		loginTv.setText(m.getLogin());
+		
+		EditText statusTv = (EditText) getActivity().findViewById(R.id.profiltab_status);
+		statusTv.setText(m.getStatus());
 	}
 
 	public void onTabSelected(Tab tab, FragmentTransaction ft) {

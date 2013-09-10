@@ -28,9 +28,10 @@ public class MemberAdapter extends ArrayAdapter<Member> {
 		
 		TextView idTextView = (TextView) rowView.findViewById(R.id.member_list_id);
 		idTextView.setText(member.getId());
-		idTextView.setTextColor(member.getGender().equals("F")?Color.RED:Color.BLUE);
+		
 		TextView loginTextView = (TextView) rowView.findViewById(R.id.member_list_login);
 		loginTextView.setText(member.getLogin());
+		loginTextView.setTextColor(member.getGender().equals("F")?Color.RED:Color.BLUE);
 		//TextView passwdTextView = (TextView) rowView.findViewById(R.id.member_list_passwd);
 		//passwdTextView.setText(member.getPasswd());
 		//TextView cityTextView = (TextView) rowView.findViewById(R.id.member_list_city);

@@ -110,8 +110,8 @@ public class DBService {
 		return 1;
 	}
 
-	public Member getAccount(int id) {
-		Cursor cursor = database.query(TABLE_NAME_MEMBER, new String[] { "login", "passwd", "city", "email", "status", "description", "id", "gender", "points", "birth"}, "id=" + id, null, null, null, null);
+	public Member getAccount(String string) {
+		Cursor cursor = database.query(TABLE_NAME_MEMBER, new String[] { "login", "passwd", "city", "email", "status", "description", "id", "gender", "points", "birth"}, "id=" + string, null, null, null, null);
 		if (cursor.moveToFirst()) {
 			do {
 				try{
@@ -168,9 +168,8 @@ public class DBService {
 	}
 
 	public Member[] getMembers() {
-	//public List<Member> getMembers() {
 		List<Member> res = new ArrayList<Member>();
-		Cursor cursor = database.query(TABLE_NAME_MEMBER, new String[] { "login", "passwd", "city", "email", "status", "description", "id", "gender", "points", "birth"}, null, null, null, null, null);
+		Cursor cursor = database.query(TABLE_NAME_MEMBER, new String[] { "login", "city", "email", "status", "description", "id", "gender", "points", "birth"}, null, null, null, null, null);
 		if (cursor.moveToFirst()) {
 			do {
 				try{
@@ -181,21 +180,21 @@ public class DBService {
 					member.setStatus(cursor.getString(3));
 					member.setDescription(cursor.getString(4));
 					member.setId(cursor.getString(5));
-					member.setGender(cursor.getString(6));
-					member.setPoints(cursor.getString(7));
+					String g = cursor.getString(6);
+					member.setGender(g);
+					String p = cursor.getString(7);
+					member.setPoints(p);
 					member.setBirth(cursor.getString(8));
 					res.add(member);
 				}catch(Exception e){
 					String s = e.getMessage();
 				}
-
 			} while (cursor.moveToNext());
 		}
 		if (cursor != null && !cursor.isClosed()) {
 			cursor.close();
 		}
 		return (Member[]) res.toArray(new Member[res.size()]);
-		//return res;
 	}
 	
 	public int getMemberId(String login){
